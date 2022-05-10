@@ -22,7 +22,7 @@ var morseCodeMap = map[string]string{
 	"(": "-.--.", ")": "-.--.-",
 }
 
-func Converter(text string) string {
+func Converter(text string) {
 	for _, char := range text {
 		value, ok := morseCodeMap[string(char)]
 		if ok {
@@ -33,5 +33,4 @@ func Converter(text string) string {
 	}
 	fmt.Println("")
 	fmt.Println("Done")
-	return ""
 }
