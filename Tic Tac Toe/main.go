@@ -1,10 +1,14 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
+	"os"
+	"os/exec"
+	"strings"
 )
 
-var ttt_dict = map[string]map[string]string{
+var ttt_map = map[string]map[string]string{
 	"top":    {"left": " ", "middle": " ", "right": " "},
 	"middle": {"left": " ", "middle": " ", "right": " "},
 	"bottom": {"left": " ", "middle": " ", "right": " "},
@@ -12,48 +16,77 @@ var ttt_dict = map[string]map[string]string{
 
 func drawBoard() {
 
-	fmt.Println(ttt_dict["top"]["left"], "|", ttt_dict["top"]["middle"], "|", ttt_dict["top"]["right"])
+	fmt.Println(ttt_map["top"]["left"], "|", ttt_map["top"]["middle"], "|", ttt_map["top"]["right"])
 	fmt.Println("-----------")
-	fmt.Println(ttt_dict["middle"]["left"], "|", ttt_dict["middle"]["middle"], "|", ttt_dict["middle"]["right"])
+	fmt.Println(ttt_map["middle"]["left"], "|", ttt_map["middle"]["middle"], "|", ttt_map["middle"]["right"])
 	fmt.Println("-----------")
-	fmt.Println(ttt_dict["bottom"]["left"], "|", ttt_dict["bottom"]["middle"], "|", ttt_dict["bottom"]["right"])
+	fmt.Println(ttt_map["bottom"]["left"], "|", ttt_map["bottom"]["middle"], "|", ttt_map["bottom"]["right"])
 	fmt.Println()
 }
 
-func main() {
+func players(player int, symbol string) {
+	//Asks the player to specify the spot where they want their mark and check if that spot if free or not.
+	reader := bufio.NewReader(os.Stdin)
+	for {
+		fmt.Printf("Player %d, enter the row: ", player)
+		row, _ := reader.ReadString('\n')
+		fmt.Printf("Player %d, enter the column: ", player)
+		column, _ := reader.ReadString('\n')
+		row = strings.TrimSpace(row)
+		column = strings.TrimSpace(column)
+
+		//Add row, column value error checking here
+		if ttt_map[row][column] == " " {
+			ttt_map[row][column] = symbol
+			break
+		} else {
+			fmt.Println("Spot already taken on the board - select another one please.")
+		}
+	}
+
 	drawBoard()
 }
 
-// def players(player, symbol):
-//     """Asks the player to specify the spot where they want their mark and check if that spot if free or not."""
-//     while True:
-//         row, column = input(f"{player}: What row and column do you want to put an {symbol} to? ").split()
-//         if ttt_dict[row][column] == " ":
-//             ttt_dict[row][column] = symbol
-//             print()
-//             draw_board()
-//             break
-//         else:
-//             print("Spot already taken on the board - select another one please.")
-//             continue
+func checkWin() bool {
+	if ttt_map["top"]["left"] == ttt_map["top"]["middle"] == ttt_map["top"]["right"] != " " ||
+		ttt_map["middle"]["left"] == ttt_map["middle"]["middle"] == ttt_map["middle"]["right"] != " " ||
+		ttt_map["bottom"]["left"] == ttt_map["bottom"]["middle"] == ttt_map["bottom"]["right"] != " " ||
+		ttt_map["top"]["left"] == ttt_map["middle"]["middle"] == ttt_map["bottom"]["right"] != " " ||
+		ttt_map["top"]["right"] == ttt_map["middle"]["middle"] == ttt_map["bottom"]["left"] != " " ||
+		ttt_map["top"]["right"] == ttt_map["middle"]["right"] == ttt_map["bottom"]["right"] != " "|
+			ttt_map["top"]["middle"] == ttt_map["middle"]["middle"] == ttt_map["bottom"]["middle"] != " " ||
+		ttt_map["top"]["left"] == ttt_map["middle"]["left"] == ttt_map["bottom"]["left"] != " " {
+		return true
+	}
+}
 
 // def check_win():
 //     """Check all the possible win combinations, each one in a different line."""
-//     if (ttt_dict["top"]["left"] == ttt_dict["top"]["middle"] == ttt_dict["top"]["right"] != " " or
-//             ttt_dict["middle"]["left"] == ttt_dict["middle"]["middle"] == ttt_dict["middle"]["right"] != " " or
-//             ttt_dict["bottom"]["left"] == ttt_dict["bottom"]["middle"] == ttt_dict["bottom"]["right"] != " " or
-//             ttt_dict["top"]["left"] == ttt_dict["middle"]["middle"] == ttt_dict["bottom"]["right"] != " " or
-//             ttt_dict["top"]["right"] == ttt_dict["middle"]["middle"] == ttt_dict["bottom"]["left"] != " " or
-//             ttt_dict["top"]["right"] == ttt_dict["middle"]["right"] == ttt_dict["bottom"]["right"] != " " or
-//             ttt_dict["top"]["middle"] == ttt_dict["middle"]["middle"] == ttt_dict["bottom"]["middle"] != " " or
-//             ttt_dict["top"]["left"] == ttt_dict["middle"]["left"] == ttt_dict["bottom"]["left"] != " "):
+//     if (ttt_map["top"]["left"] == ttt_map["top"]["middle"] == ttt_map["top"]["right"] != " " or
+//             ttt_map["middle"]["left"] == ttt_map["middle"]["middle"] == ttt_map["middle"]["right"] != " " or
+//             ttt_map["bottom"]["left"] == ttt_map["bottom"]["middle"] == ttt_map["bottom"]["right"] != " " or
+//             ttt_map["top"]["left"] == ttt_map["middle"]["middle"] == ttt_map["bottom"]["right"] != " " or
+//             ttt_map["top"]["right"] == ttt_map["middle"]["middle"] == ttt_map["bottom"]["left"] != " " or
+//             ttt_map["top"]["right"] == ttt_map["middle"]["right"] == ttt_map["bottom"]["right"] != " " or
+//             ttt_map["top"]["middle"] == ttt_map["middle"]["middle"] == ttt_map["bottom"]["middle"] != " " or
+//             ttt_map["top"]["left"] == ttt_map["middle"]["left"] == ttt_map["bottom"]["left"] != " "):
 //         return True
 
-// print("Welcome to a text based Tic Tac Toe game. \n"
-//       "The rows are called top, middle and bottom.\n"
-//       "The columns are called left, middle and right.\n"
-//       "To choose where to put your mark type in the row and column separated by a space, for example: 'top middle'.")
-// print("-" * 110)
+func main() {
+	clear := exec.Command("clear")
+	clear.Stdout = os.Stdout
+	clear.Run()
+	fmt.Print("----------------------------------------------\n",
+		"Welcome to a text based Tic Tac Toe game.\n",
+		"The rows are called top, middle and bottom.\n",
+		"The columns are called left, middle and right.\n",
+		"----------------------------------------------\n")
+	for {
+		players(1, "X")
+		players(2, "O")
+	}
+
+}
 
 // while True:
 //     players("Player 1", "X")
