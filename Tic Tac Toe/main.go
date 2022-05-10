@@ -13,6 +13,9 @@ var ttt_map = map[string]map[string]string{
 	"middle": {"left": " ", "middle": " ", "right": " "},
 	"bottom": {"left": " ", "middle": " ", "right": " "},
 }
+var reader = bufio.NewReader(os.Stdin)
+var row string
+var column string
 
 func drawBoard() {
 
@@ -26,12 +29,12 @@ func drawBoard() {
 
 func players(player int, symbol string) {
 	//Asks the player to specify the spot where they want their mark and check if that spot if free or not.
-	reader := bufio.NewReader(os.Stdin)
+
 	for {
 		fmt.Printf("Player %d, enter the row: ", player)
-		row, _ := reader.ReadString('\n')
+		row, _ = reader.ReadString('\n')
 		fmt.Printf("Player %d, enter the column: ", player)
-		column, _ := reader.ReadString('\n')
+		column, _ = reader.ReadString('\n')
 		row = strings.TrimSpace(row)
 		column = strings.TrimSpace(column)
 
