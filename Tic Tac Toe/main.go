@@ -28,26 +28,31 @@ func drawBoard() {
 }
 
 func players(player int, symbol string) {
-	//Asks the player to specify the spot where they want their mark and check if that spot if free or not.
-
+	//Asks the player to specify the spot where they want their mark and checks if that spot is valid and free.
 	for {
+		drawBoard()
 		fmt.Printf("Player %d, enter the row: ", player)
 		row, _ = reader.ReadString('\n')
-		fmt.Printf("Player %d, enter the column: ", player)
-		column, _ = reader.ReadString('\n')
 		row = strings.TrimSpace(row)
-		column = strings.TrimSpace(column)
+		if strings.Contains("top middle bottom", row) {
+			fmt.Printf("Player %d, enter the column: ", player)
+			column, _ = reader.ReadString('\n')
+			column = strings.TrimSpace(column)
+			if strings.Contains("left middle right", column) {
+				if ttt_map[row][column] == " " {
+					ttt_map[row][column] = symbol
+					break
+				} else if ttt_map[row][column] != " " {
+					fmt.Println("Spot already taken on the board - select another one please.")
+				} else {
+					fmt.Println("Invalid entry, try again.")
+				}
+			} else {
+				fmt.Println("Invalid entry, try again.")
+			}
 
-		//Add row, column value error checking here
-		if ttt_map[row][column] == " " {
-			ttt_map[row][column] = symbol
-			break
-		} else {
-			fmt.Println("Spot already taken on the board - select another one please.")
 		}
 	}
-
-	drawBoard()
 }
 
 func checkWin(player string) bool {
