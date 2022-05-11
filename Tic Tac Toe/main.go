@@ -50,30 +50,27 @@ func players(player int, symbol string) {
 	drawBoard()
 }
 
-func checkWin() bool {
-	if ttt_map["top"]["left"] == ttt_map["top"]["middle"] == ttt_map["top"]["right"] != " " ||
-		ttt_map["middle"]["left"] == ttt_map["middle"]["middle"] == ttt_map["middle"]["right"] != " " ||
-		ttt_map["bottom"]["left"] == ttt_map["bottom"]["middle"] == ttt_map["bottom"]["right"] != " " ||
-		ttt_map["top"]["left"] == ttt_map["middle"]["middle"] == ttt_map["bottom"]["right"] != " " ||
-		ttt_map["top"]["right"] == ttt_map["middle"]["middle"] == ttt_map["bottom"]["left"] != " " ||
-		ttt_map["top"]["right"] == ttt_map["middle"]["right"] == ttt_map["bottom"]["right"] != " "|
-			ttt_map["top"]["middle"] == ttt_map["middle"]["middle"] == ttt_map["bottom"]["middle"] != " " ||
-		ttt_map["top"]["left"] == ttt_map["middle"]["left"] == ttt_map["bottom"]["left"] != " " {
+func checkWin(player string) bool {
+	//Check all the win conditions and return true or false
+	if ttt_map["top"]["left"] != " " && ttt_map["top"]["left"] == ttt_map["top"]["middle"] && ttt_map["top"]["left"] == ttt_map["top"]["right"] {
+		return true
+	} else if ttt_map["middle"]["left"] != " " && ttt_map["middle"]["left"] == ttt_map["middle"]["middle"] && ttt_map["middle"]["left"] == ttt_map["middle"]["right"] {
+		return true
+	} else if ttt_map["bottom"]["left"] != " " && ttt_map["bottom"]["left"] == ttt_map["bottom"]["middle"] && ttt_map["bottom"]["left"] == ttt_map["bottom"]["right"] {
+		return true
+	} else if ttt_map["top"]["left"] != " " && ttt_map["top"]["left"] == ttt_map["middle"]["middle"] && ttt_map["top"]["left"] == ttt_map["bottom"]["right"] {
+		return true
+	} else if ttt_map["bottom"]["left"] != " " && ttt_map["bottom"]["left"] == ttt_map["middle"]["middle"] && ttt_map["bottom"]["left"] == ttt_map["top"]["right"] {
+		return true
+	} else if ttt_map["top"]["left"] != " " && ttt_map["top"]["left"] == ttt_map["middle"]["left"] && ttt_map["top"]["left"] == ttt_map["bottom"]["left"] {
+		return true
+	} else if ttt_map["top"]["middle"] != " " && ttt_map["top"]["middle"] == ttt_map["middle"]["middle"] && ttt_map["top"]["middle"] == ttt_map["bottom"]["middle"] {
+		return true
+	} else if ttt_map["top"]["right"] != " " && ttt_map["top"]["right"] == ttt_map["middle"]["right"] && ttt_map["top"]["right"] == ttt_map["bottom"]["right"] {
 		return true
 	}
+	return false
 }
-
-// def check_win():
-//     """Check all the possible win combinations, each one in a different line."""
-//     if (ttt_map["top"]["left"] == ttt_map["top"]["middle"] == ttt_map["top"]["right"] != " " or
-//             ttt_map["middle"]["left"] == ttt_map["middle"]["middle"] == ttt_map["middle"]["right"] != " " or
-//             ttt_map["bottom"]["left"] == ttt_map["bottom"]["middle"] == ttt_map["bottom"]["right"] != " " or
-//             ttt_map["top"]["left"] == ttt_map["middle"]["middle"] == ttt_map["bottom"]["right"] != " " or
-//             ttt_map["top"]["right"] == ttt_map["middle"]["middle"] == ttt_map["bottom"]["left"] != " " or
-//             ttt_map["top"]["right"] == ttt_map["middle"]["right"] == ttt_map["bottom"]["right"] != " " or
-//             ttt_map["top"]["middle"] == ttt_map["middle"]["middle"] == ttt_map["bottom"]["middle"] != " " or
-//             ttt_map["top"]["left"] == ttt_map["middle"]["left"] == ttt_map["bottom"]["left"] != " "):
-//         return True
 
 func main() {
 	clear := exec.Command("clear")
@@ -86,17 +83,15 @@ func main() {
 		"----------------------------------------------\n")
 	for {
 		players(1, "X")
+		if checkWin("1") {
+			fmt.Println("Player 1 wins.")
+			break
+		}
 		players(2, "O")
+		if checkWin("2") {
+			fmt.Println("Player 2 wins.")
+			break
+		}
 	}
 
 }
-
-// while True:
-//     players("Player 1", "X")
-//     if check_win() is True:
-//         print("Player 1 wins.")
-//         break
-//     players("Player 2", "O")
-//     if check_win() is True:
-//         print("Player 2 wins.")
-//         break
