@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"io"
 	"log"
 	"os"
 
@@ -37,12 +38,36 @@ func getVoices(pollySession *session.Session) {
 	}
 }
 
+func synthSpeach(pollySession *session.Session) {
+	svc := polly.New(pollySession)
+	input := &polly.SynthesizeSpeechInput{OutputFormat: aws.String("mp3"), Text: aws.String("Some text here to read"), VoiceId: aws.String("Joanna")}
+	output, err := svc.SynthesizeSpeech(input)
+	if err != nil {
+		fmt.Println("Got error calling SynthesizeSpeech:")
+		fmt.Print(err.Error())
+		os.Exit(1)
+	}
+
+	mp3File := "test.mp3"
+	outFile, _ := os.Create(mp3File)
+	defer outFile.Close()
+
+	_, err = io.Copy(outFile, output.AudioStream)
+	if err != nil {
+		fmt.Println("Got error saving MP3:")
+		fmt.Print(err.Error())
+		os.Exit(1)
+	}
+
+}
+
 func main() {
 	err := godotenv.Load(envFile)
 	if err != nil {
 		log.Fatal("Error loading .env file")
 	}
 	pollySession := createSession()
-	getVoices(pollySession)
+	//getVoices(pollySession)
+	synthSpeach(pollySession)
 
 }
