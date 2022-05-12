@@ -1,4 +1,4 @@
-module polly
+module AWSPolly
 
 go 1.18
 
