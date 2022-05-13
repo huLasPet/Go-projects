@@ -2,7 +2,6 @@ package main
 
 import (
 	"AWSPolly/AWSPolly"
-	"fmt"
 	"log"
 	"net/http"
 	"text/template"
@@ -29,7 +28,6 @@ func homePage(responseWriter http.ResponseWriter, r *http.Request) {
 }
 
 func startSynth(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("method:", r.Method) //get request method
 	if r.Method == "GET" {
 		t, _ := template.ParseFiles("index.html")
 		t.Execute(w, nil)
