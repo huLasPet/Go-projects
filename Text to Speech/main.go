@@ -15,7 +15,6 @@ func startSynth(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "GET" {
 		t, _ := template.ParseFiles("Files/index.html")
 		t.Execute(w, nil)
-
 	} else {
 		r.ParseForm()
 		tts := r.Form["tts"][0]
@@ -28,8 +27,8 @@ func startSynth(w http.ResponseWriter, r *http.Request) {
 
 func play(w http.ResponseWriter, r *http.Request) {
 	http.ServeFile(w, r, "Files/synthedText.mp3")
-
 }
+
 func main() {
 	err := godotenv.Load(envFile)
 	if err != nil {
