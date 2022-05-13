@@ -22,7 +22,7 @@ func GetVoices(pollySession *session.Session) {
 	}
 }
 
-func SynthSpeach(pollySession *session.Session, text, voice, filename string) {
+func SynthSpeach(pollySession *session.Session, text, voice string) {
 	svc := polly.New(pollySession)
 	input := &polly.SynthesizeSpeechInput{OutputFormat: aws.String("mp3"), Text: aws.String(text), VoiceId: aws.String(voice), Engine: aws.String("neural")}
 	output, err := svc.SynthesizeSpeech(input)
@@ -32,7 +32,7 @@ func SynthSpeach(pollySession *session.Session, text, voice, filename string) {
 		os.Exit(1)
 	}
 
-	outFile, _ := os.Create(filename + "/synthedText.mp3")
+	outFile, _ := os.Create("Files/synthedText.mp3")
 	defer outFile.Close()
 
 	_, err = io.Copy(outFile, output.AudioStream)
