@@ -3,25 +3,33 @@ package main
 import (
 	"AWSPolly/AWSPolly"
 	"log"
-	"os"
+	"net/http"
+	"text/template"
 
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/credentials"
-	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/joho/godotenv"
 )
 
 const envFile = "/Users/nbyy/Library/CloudStorage/OneDrive-Personal/Golang Round 1/Golang env files/.env"
 
-func createSession() *session.Session {
-	ttsKey := os.Getenv("tts_key")
-	ttsSecret := os.Getenv("tts_secret")
+func renderTemplate(w http.ResponseWriter, page string) {
+	templateVariable, err := template.ParseFiles(page)
+	if err != nil {
+		panic(err)
+	}
+	err = templateVariable.Execute(w, nil)
+	if err != nil {
+		panic(err)
+	}
+}
 
-	sess, _ := session.NewSession(&aws.Config{
-		Region:      aws.String("eu-central-1"),
-		Credentials: credentials.NewStaticCredentials(ttsKey, ttsSecret, ""),
-	})
-	return sess
+func homePage(responseWriter http.ResponseWriter, r *http.Request) {
+	renderTemplate(responseWriter, "Files/index.html")
+
+}
+
+func startSynth(w http.ResponseWriter, r *http.Request) {
+	pollySession := AWSPolly.CreateSession()
+	AWSPolly.SynthSpeach(pollySession)
 }
 
 func main() {
@@ -29,9 +37,11 @@ func main() {
 	if err != nil {
 		log.Fatal("Error loading .env file")
 	}
-	pollySession := createSession()
-	AWSPolly.GetVoices(pollySession)
-	AWSPolly.SynthSpeach(pollySession)
+	http.HandleFunc("/", homePage)
+	http.HandleFunc("/play", startSynth)
+	http.ListenAndServe(":8080", nil)
+
+	//AWSPolly.GetVoices(pollySession)
 
 	//TODO: Create a webapp from this
 }

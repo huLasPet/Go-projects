@@ -6,6 +6,7 @@ import (
 	"os"
 
 	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/polly"
 )
@@ -42,4 +43,15 @@ func SynthSpeach(pollySession *session.Session) {
 		os.Exit(1)
 	}
 
+}
+
+func CreateSession() *session.Session {
+	ttsKey := os.Getenv("tts_key")
+	ttsSecret := os.Getenv("tts_secret")
+
+	sess, _ := session.NewSession(&aws.Config{
+		Region:      aws.String("eu-central-1"),
+		Credentials: credentials.NewStaticCredentials(ttsKey, ttsSecret, ""),
+	})
+	return sess
 }
