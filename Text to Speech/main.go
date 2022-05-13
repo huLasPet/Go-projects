@@ -2,6 +2,7 @@ package main
 
 import (
 	"AWSPolly/AWSPolly"
+	"fmt"
 	"log"
 	"net/http"
 	"text/template"
@@ -28,8 +29,18 @@ func homePage(responseWriter http.ResponseWriter, r *http.Request) {
 }
 
 func startSynth(w http.ResponseWriter, r *http.Request) {
-	pollySession := AWSPolly.CreateSession()
-	AWSPolly.SynthSpeach(pollySession)
+	fmt.Println("method:", r.Method) //get request method
+	if r.Method == "GET" {
+		t, _ := template.ParseFiles("index.html")
+		t.Execute(w, nil)
+	} else {
+		r.ParseForm()
+		tts := r.Form["tts"][0]
+		voice := r.Form["voice"][0]
+		pollySession := AWSPolly.CreateSession()
+		AWSPolly.SynthSpeach(pollySession, tts, voice)
+	}
+
 }
 
 func main() {
@@ -38,10 +49,6 @@ func main() {
 		log.Fatal("Error loading .env file")
 	}
 	http.HandleFunc("/", homePage)
-	http.HandleFunc("/play", startSynth)
+	http.HandleFunc("/startsynth", startSynth)
 	http.ListenAndServe(":8080", nil)
-
-	//AWSPolly.GetVoices(pollySession)
-
-	//TODO: Create a webapp from this
 }

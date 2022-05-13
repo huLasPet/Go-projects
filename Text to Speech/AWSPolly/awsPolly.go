@@ -22,9 +22,9 @@ func GetVoices(pollySession *session.Session) {
 	}
 }
 
-func SynthSpeach(pollySession *session.Session) {
+func SynthSpeach(pollySession *session.Session, text, voice string) {
 	svc := polly.New(pollySession)
-	input := &polly.SynthesizeSpeechInput{OutputFormat: aws.String("mp3"), Text: aws.String("Some more text here to read"), VoiceId: aws.String("Joanna")}
+	input := &polly.SynthesizeSpeechInput{OutputFormat: aws.String("mp3"), Text: aws.String(text), VoiceId: aws.String(voice), Engine: aws.String("neural")}
 	output, err := svc.SynthesizeSpeech(input)
 	if err != nil {
 		fmt.Println("Got error calling SynthesizeSpeech:")

@@ -9,12 +9,30 @@
 
 </head>
 <body>
- Placeholder
+    <form action="/startsynth" method="post">
+        Text to synth:<input type="text" name="tts">
+        <label for="voice">Voice to use:</label>
+        <select id="voice" name="voice">
+          <option value="Olivia">Olivia</option>
+          <option value="Matthew">Matthew</option>
+          <option value="Amy">Amy</option>
+          <option value="Emma">Emma</option>
+          <option value="Brian">Brian</option>
+          <option value="Aria">Aria</option>
+          <option value="Ayanda">Ayanda</option>
+          <option value="Ivy">Ivy</option>
+          <option value="Joanna">Joanna</option>
+          <option value="Kendra">Kendra</option>
+          <option value="Kimberly">Kimberly</option>
+          <option value="Salli">Salli</option>
+          <option value="Joey">Joey</option>
+          <option value="Justin">Justin</option>
+          <option value="Kevin">Kevin</option>
+        </select> 
+        <input type="submit" value="Go">
+    </form>
 </body>
-<script>
-    function go() {
-        fetch("/play")
-    }
-</script>
+
 
 </html>
+
