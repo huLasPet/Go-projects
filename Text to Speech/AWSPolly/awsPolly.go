@@ -32,7 +32,6 @@ func SynthSpeach(pollySession *session.Session, text, voice, filename string) {
 		os.Exit(1)
 	}
 
-	//mp3File := "pollySynth.mp3"
 	outFile, _ := os.Create(filename + "/synthedText.mp3")
 	defer outFile.Close()
 
